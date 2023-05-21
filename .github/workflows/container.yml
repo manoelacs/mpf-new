@@ -2,7 +2,7 @@ name: deploy-container
 
 on:
     push:
-        banches:       
+        branches:       
         - master
         paths:
             - packages;contaier/**
@@ -13,16 +13,15 @@ defaults:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
-        
+        runs-on: ubuntu-latest        
         steps:
-            - users: action/chackout@v2
+            - uses: action/chackout@v2
             - run: npm install
             - run: npm run build
 
             - uses: shinyinc/action-aws-cli@v1.2
             - run: aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/container/latest
-            env:
+              env:
                 AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                 AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 AWS_DEFAULT_REGION: us-east-2
